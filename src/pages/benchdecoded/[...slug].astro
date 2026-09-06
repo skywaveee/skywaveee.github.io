@@ -1,0 +1,39 @@
+---
+import MarkdownLayout from '../../layouts/MarkdownLayout.astro';
+
+interface MarkdownModule {
+	frontmatter: {
+		title?: string;
+	};
+	Content: unknown;
+}
+
+export function getStaticPaths() {
+	const modules = import.meta.glob('../../content/benchdecoded/**/*.md', {
+		eager: true,
+	}) as Record<string, MarkdownModule>;
+
+	return Object.entries(modules)
+		.filter(([path]) => !path.endsWith('/README.md'))
+		.map(([path, module]) => {
+			const sourcePath = path.split('/content/benchdecoded/')[1];
+			const slug = sourcePath.replace(/\.md$/i, '').replace(/\/README$/i, '');
+			const fallbackTitle = slug.split('/').at(-1)?.replaceAll('-', ' ') ?? slug;
+
+			return {
+				params: { slug },
+				props: {
+					Content: module.Content,
+					sourcePath,
+					title: module.frontmatter.title ?? fallbackTitle,
+				},
+			};
+		});
+}
+
+const { Content, sourcePath, title } = Astro.props;
+---
+
+<MarkdownLayout title={title} sourcePath={sourcePath}>
+	<Content />
+</MarkdownLayout>

@@ -1,0 +1,59 @@
+---
+import MarkdownLayout from '../../layouts/MarkdownLayout.astro';
+
+interface MarkdownModule {
+	frontmatter: {
+		title?: string;
+		description?: string;
+	};
+	Content: unknown;
+}
+
+const modules = import.meta.glob('../../content/benchdecoded/**/*.md', {
+	eager: true,
+}) as Record<string, MarkdownModule>;
+
+const entries = Object.entries(modules);
+const overviewEntry = entries.find(([path]) => path.endsWith('/README.md'));
+const Overview = overviewEntry?.[1].Content;
+
+const documents = entries
+	.filter(([path]) => !path.endsWith('/README.md'))
+	.map(([path, module]) => {
+		const sourcePath = path.split('/content/benchdecoded/')[1];
+		const slug = sourcePath.replace(/\.md$/i, '').replace(/\/README$/i, '');
+		const fallbackTitle = slug.split('/').at(-1)?.replaceAll('-', ' ') ?? slug;
+
+		return {
+			slug,
+			sourcePath,
+			title: module.frontmatter.title ?? fallbackTitle,
+			description: module.frontmatter.description,
+		};
+	})
+	.sort((left, right) => left.title.localeCompare(right.title));
+---
+
+<MarkdownLayout title="BenchDecoded">
+	{Overview ? <Overview /> : <h1>BenchDecoded</h1>}
+
+	{
+		documents.length > 0 ? (
+			<>
+				<h2>Benchmark Walkthroughs</h2>
+				<ul class="document-list">
+					{documents.map((document) => (
+						<li>
+							<a href={`/benchdecoded/${document.slug}/`}>
+								<strong>{document.title}</strong>
+								<small>{document.description ?? document.sourcePath}</small>
+							</a>
+						</li>
+					))}
+				</ul>
+			</>
+		) : (
+			<p>Benchmark walkthroughs will appear here as Markdown files are added.</p>
+		)
+	}
+</MarkdownLayout>

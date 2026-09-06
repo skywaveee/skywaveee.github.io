@@ -1,0 +1,34 @@
+# build output
+dist/
+# generated types
+.astro/
+# generated Markdown copied from sibling repositories
+src/content/benchdecoded/
+
+# dependencies
+node_modules/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+
+# environment variables
+.env
+.env.production
+
+# macOS-specific files
+.DS_Store
+
+# jetbrains setting folder
+.idea/
+
+# local AI coding instructions and personal context
+CLAUDE.md
+AGENTS.md
+Mindspace
+.claude/
+.cursor/
+.codex/

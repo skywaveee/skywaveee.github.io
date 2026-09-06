@@ -1,0 +1,33 @@
+---
+import '../styles/markdown.css';
+
+interface Props {
+	title: string;
+	sourcePath?: string;
+}
+
+const { title, sourcePath } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<meta name="description" content={`${title} — BenchDecoded`} />
+		<title>{title} · BenchDecoded</title>
+	</head>
+	<body>
+		<header class="site-header">
+			<a href="/benchdecoded/">BenchDecoded</a>
+			<span>One benchmark. One real example. One reproducible run.</span>
+		</header>
+		<main>
+			<article class="markdown">
+				<slot />
+			</article>
+			{sourcePath && <p class="source-path">Source: {sourcePath}</p>}
+		</main>
+	</body>
+</html>
