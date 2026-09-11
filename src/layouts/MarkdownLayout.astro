@@ -1,33 +1,157 @@
 ---
 import '../styles/markdown.css';
+import '../styles/benchdecoded.css';
+
+interface BenchPayload {
+	id: string;
+	data: unknown;
+}
+
+interface Heading {
+	depth: number;
+	slug: string;
+	text: string;
+}
 
 interface Props {
 	title: string;
 	sourcePath?: string;
+	benchPayloads?: BenchPayload[];
+	toc?: Heading[];
 }
 
-const { title, sourcePath } = Astro.props;
+const { title, sourcePath, benchPayloads, toc } = Astro.props;
+
+// Bench sidebar nav — derived from the synced content so new benchmark
+// entries appear automatically. Categories can be added later by grouping
+// on a benchmark.json field.
+interface NavModule {
+	frontmatter: {
+		title?: string;
+	};
+}
+
+const navModules = import.meta.glob('../content/benchdecoded/benchmarks/*/README.md', {
+	eager: true,
+}) as Record<string, NavModule>;
+
+const benches = Object.entries(navModules)
+	.map(([path, m]) => {
+		const slug = path.split('/benchmarks/')[1]?.split('/')[0] ?? '';
+		return { slug, title: m.frontmatter.title ?? slug, href: `/benchdecoded/${slug}/` };
+	})
+	.sort((a, b) => a.title.localeCompare(b.title));
+
+const currentPath = Astro.url.pathname.replace(/\/$/, '');
+const isIndex = currentPath === '/benchdecoded';
+const activeSlug = isIndex ? '' : (/^\/benchdecoded\/([^/]+)$/.exec(currentPath)?.[1] ?? '');
+
+const tocItems = (toc ?? []).filter((h) => h.depth === 2);
+const hasNav = benches.length > 0;
+
+// Payloads are emitted as raw <script type="application/json"> tags (never
+// executed); "<" is escaped to \u003c so file contents can never break out of
+// the script element. The components module reads them by id on upgrade.
+const payloadTags = (benchPayloads ?? [])
+	.map(
+		(p) =>
+			`<script type="application/json" id="bench-data-${p.id}">${JSON.stringify(p.data)
+				.split('<')
+				.join('\\u003c')}</script>`,
+	)
+	.join('\n');
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="description" content={`${title} — BenchDecoded`} />
 		<title>{title} · BenchDecoded</title>
 	</head>
 	<body>
 		<header class="site-header">
-			<a href="/benchdecoded/">BenchDecoded</a>
-			<span>One benchmark. One real example. One reproducible run.</span>
+			<div class="site-header__identity">
+				<a href="/benchdecoded/">BenchDecoded</a>
+				<span>一个 Benchmark，一个真实样本，一条完整评分链。</span>
+			</div>
+			<nav aria-label="主导航">
+				<a href="/">个人主页</a>
+				<a href="/learning/">学习知识库</a>
+			</nav>
 		</header>
-		<main>
-			<article class="markdown">
-				<slot />
-			</article>
-			{sourcePath && <p class="source-path">Source: {sourcePath}</p>}
-		</main>
+		<div
+			class:list={[
+				'page-shell',
+				!hasNav && 'single',
+				hasNav && tocItems.length === 0 && 'no-toc',
+			]}
+		>
+			{
+				hasNav && (
+					<aside class="side-nav" aria-label="Benchmark 导航">
+						<span class="side-label">Benchmarks</span>
+						<a class:list={['side-link', isIndex && 'on']} href="/benchdecoded/">
+							总览
+						</a>
+						{benches.map((b) => (
+							<a class:list={['side-link', activeSlug === b.slug && 'on']} href={b.href}>
+								{b.title}
+							</a>
+						))}
+					</aside>
+				)
+			}
+			<main>
+				<article class="markdown">
+					<slot />
+				</article>
+				{sourcePath && <p class="source-path">来源：{sourcePath}</p>}
+			</main>
+			{
+				hasNav && tocItems.length > 0 && (
+					<aside class="side-toc" aria-label="本页目录">
+						<span class="side-label">本页目录</span>
+						<nav id="toc-nav">
+							{tocItems.map((h) => (
+								<a href={`#${h.slug}`}>{h.text}</a>
+							))}
+						</nav>
+					</aside>
+				)
+			}
+		</div>
+		{payloadTags && <Fragment set:html={payloadTags} />}
+		<script>
+			import '../scripts/benchdecoded-components';
+		</script>
+		<script>
+			// TOC scroll-spy: highlight the last h2 above the viewport top.
+			const nav = document.getElementById('toc-nav');
+			if (nav) {
+				const links = [...nav.querySelectorAll('a')];
+				const headings = links
+					.map((a) => document.getElementById(decodeURIComponent(a.hash.slice(1))))
+					.filter(Boolean);
+				const setActive = (id: string) =>
+					links.forEach((a) => a.classList.toggle('on', a.hash === `#${id}`));
+				const update = () => {
+					let current = headings[0]?.id ?? '';
+					for (const h of headings) {
+						if ((h as HTMLElement).getBoundingClientRect().top < 128) current = h.id;
+					}
+					setActive(current);
+				};
+				update();
+				window.addEventListener(
+					'scroll',
+					() => requestAnimationFrame(update),
+					{ passive: true },
+				);
+			}
+		</script>
 	</body>
 </html>

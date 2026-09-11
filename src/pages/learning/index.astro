@@ -1,0 +1,135 @@
+---
+import LearningLayout from '../../layouts/LearningLayout.astro';
+
+interface LearningModule {
+	frontmatter: {
+		title?: string;
+		short_title?: string;
+		description?: string;
+		track?: string;
+		kind?: string;
+		order?: number;
+		updated_at?: string;
+	};
+}
+
+const modules = import.meta.glob('../../content/learning/*.md', {
+	eager: true,
+}) as Record<string, LearningModule>;
+
+const lessons = Object.entries(modules)
+	.map(([path, module]) => {
+		const slug = path.split('/').at(-1)?.replace(/\.md$/i, '') ?? '';
+		return { slug, ...module.frontmatter };
+	})
+	.sort((left, right) => (left.order ?? 999) - (right.order ?? 999));
+---
+
+<LearningLayout
+	title="学习知识库"
+	description="围绕 Agent 数据、训练、评测与自进化建立的可复查学习笔记。"
+>
+	<div class="hub-intro">
+		<span class="overline">LEARNING GRAPH · 2026</span>
+		<h1>Agent Learning<br />学习知识库</h1>
+		<p>先定义能力、任务空间和成功条件，再把 SFT、RL 与 Benchmark 连成同一张图。</p>
+	</div>
+
+	<div class="knowledge-loop" aria-label="学习闭环">
+		<div><span>01</span><strong>目标</strong><small>要提升什么能力</small></div>
+		<div><span>02</span><strong>任务</strong><small>输入与成功条件</small></div>
+		<div><span>03</span><strong>学习</strong><small>示范或 reward</small></div>
+		<div><span>04</span><strong>验证</strong><small>独立能力证据</small></div>
+	</div>
+
+	<section class="curriculum-section" aria-labelledby="curriculum-title">
+		<div class="section-heading">
+			<div>
+				<span class="overline">CLICKABLE CURRICULUM</span>
+				<h2 id="curriculum-title">从任务定义走到可验证的 Agent 学习</h2>
+			</div>
+			<p>按依赖关系阅读；每个节点都可以直接进入课程。</p>
+		</div>
+
+		<nav class="curriculum-map" aria-label="Agent Learning 可点击学习路线">
+			<div class="map-row map-single">
+				<a class="map-node data" href="/learning/post-training-foundations/">
+					<span>01 · SPEC</span><strong>后训练基础</strong><small>能力 · Task taxonomy · Scoring</small>
+				</a>
+			</div>
+			<div class="map-connector" aria-hidden="true">↓</div>
+			<div class="map-row map-single">
+				<a class="map-node data" href="/learning/agentic-sft/">
+					<span>02 · DATA</span><strong>Agentic SFT</strong><small>从固定专家轨迹学习</small>
+				</a>
+			</div>
+			<div class="map-connector" aria-hidden="true">↓</div>
+			<div class="map-row map-single">
+				<a class="map-node foundation" href="/learning/rl-foundations/">
+					<span>03 · FOUNDATION</span><strong>RL 共同基础</strong><small>Policy · Return · Advantage · KL</small>
+				</a>
+			</div>
+			<div class="map-split" aria-hidden="true"><span></span><span></span><span></span></div>
+			<div class="map-row map-triple">
+				<a class="map-node policy" href="/learning/ppo/">
+					<span>04 · POLICY</span><strong>PPO</strong><small>Value + GAE + Clip</small>
+				</a>
+				<a class="map-node reward" href="/learning/reward-verifiers/">
+					<span>05 · SIGNAL</span><strong>Reward &amp; Verifier</strong><small>Outcome · Process · RLVR</small>
+				</a>
+				<a class="map-node teacher" href="/learning/opd/">
+					<span>07 · TEACHER</span><strong>OPD</strong><small>Student rollout + Teacher feedback</small>
+				</a>
+			</div>
+			<div class="map-row map-triple map-second-row">
+				<a class="map-node policy" href="/learning/grpo/">
+					<span>06 · POLICY</span><strong>GRPO</strong><small>Group-relative advantage</small>
+				</a>
+				<div class="map-merge-label" aria-hidden="true">训练信号在真实环境轨迹中汇合</div>
+				<span class="map-empty" aria-hidden="true"></span>
+			</div>
+			<div class="map-connector" aria-hidden="true">↓</div>
+			<div class="map-row map-single">
+				<a class="map-node agent" href="/learning/agentic-rl/">
+					<span>08 · AGENT</span><strong>Multi-turn Agentic RL</strong><small>调用边界 · 上下文重建 · Credit assignment</small>
+				</a>
+			</div>
+			<div class="map-split map-split-two" aria-hidden="true"><span></span><span></span></div>
+			<div class="map-row map-double">
+				<a class="map-node system" href="/learning/training-systems/">
+					<span>09 · SYSTEM</span><strong>训练系统</strong><small>Rollout · Env · Trainer · Weight sync</small>
+				</a>
+				<a class="map-node evaluation" href="/learning/evaluation/">
+					<span>10 · SCIENCE</span><strong>评测与失效分析</strong><small>泛化 · 成本 · Reward hacking</small>
+				</a>
+			</div>
+		</nav>
+	</section>
+
+	<h2>全部课程</h2>
+	<div class="lesson-grid">
+		{lessons.map((lesson) => (
+			<a class="lesson-card" href={`/learning/${lesson.slug}/`}>
+				<div class="lesson-card-top">
+					<span>{String(lesson.order ?? 0).padStart(2, '0')}</span>
+					<small>{lesson.kind ?? '学习笔记'}</small>
+				</div>
+				<h3>{lesson.short_title ?? lesson.title}</h3>
+				<p>{lesson.description}</p>
+				<footer>
+					<span>{lesson.track ?? 'Agent Learning'}</span>
+					<span>阅读全文 →</span>
+				</footer>
+			</a>
+		))}
+	</div>
+
+	<section class="bench-bridge">
+		<div>
+			<span class="overline">PRACTICE</span>
+			<h2>训练知识最终要回到可执行评测</h2>
+			<p>BenchDecoded 用真实题面、模型输出和 scorer 检查“模型 + Harness”系统，而不是只看训练 loss。</p>
+		</div>
+		<a href="/benchdecoded/">打开 BenchDecoded <span>→</span></a>
+	</section>
+</LearningLayout>

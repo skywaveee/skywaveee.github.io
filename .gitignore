@@ -27,6 +27,7 @@ pnpm-debug.log*
 
 # local AI coding instructions and personal context
 CLAUDE.md
+AGENT.md
 AGENTS.md
 Mindspace
 .claude/

@@ -5,19 +5,61 @@ interface MarkdownModule {
 	frontmatter: {
 		title?: string;
 	};
+	getHeadings?: () => {
+		depth: number;
+		slug: string;
+		text: string;
+	}[];
 	Content: unknown;
 }
 
+interface BenchPayload {
+	id: string;
+	data: unknown;
+}
+
 export function getStaticPaths() {
+	// Per-benchmark structured JSON (benchmark.json / tree.json) — inlined into
+	// the page as <script type="application/json"> payloads that the
+	// benchdecoded web components (file-tree / eval-flow) read client-side.
+	// NOTE: Astro evaluates getStaticPaths in an isolated module scope, so this
+	// glob must live inside the function, not at module level.
+	const jsonModules = import.meta.glob('../../content/benchdecoded/benchmarks/*/*.json', {
+		eager: true,
+		import: 'default',
+	}) as Record<string, unknown>;
+
+	const payloadsFor = (bench: string): BenchPayload[] =>
+		Object.entries(jsonModules)
+			.filter(
+				([path]) =>
+					path.split('/content/benchdecoded/benchmarks/')[1]?.split('/')[0] === bench,
+			)
+			.map(([path, data]) => ({
+				id: `${bench}-${path.split('/').at(-1)?.replace(/\.json$/, '') ?? 'unknown'}`,
+				data,
+			}));
+
+	function routeFromSource(sourcePath: string) {
+		const withoutExtension = sourcePath.replace(/\.md$/i, '');
+		const benchmarkMatch = withoutExtension.match(/^benchmarks\/([^/]+)\/README$/i);
+
+		if (benchmarkMatch) {
+			return benchmarkMatch[1];
+		}
+
+		return withoutExtension.replace(/^benchmarks\//i, '').replace(/\/README$/i, '');
+	}
+
 	const modules = import.meta.glob('../../content/benchdecoded/**/*.md', {
 		eager: true,
 	}) as Record<string, MarkdownModule>;
 
 	return Object.entries(modules)
-		.filter(([path]) => !path.endsWith('/README.md'))
+		.filter(([path]) => !path.endsWith('/content/benchdecoded/README.md'))
 		.map(([path, module]) => {
 			const sourcePath = path.split('/content/benchdecoded/')[1];
-			const slug = sourcePath.replace(/\.md$/i, '').replace(/\/README$/i, '');
+			const slug = routeFromSource(sourcePath);
 			const fallbackTitle = slug.split('/').at(-1)?.replaceAll('-', ' ') ?? slug;
 
 			return {
@@ -26,14 +68,16 @@ export function getStaticPaths() {
 					Content: module.Content,
 					sourcePath,
 					title: module.frontmatter.title ?? fallbackTitle,
+					benchPayloads: payloadsFor(slug.split('/')[0]),
+					toc: module.getHeadings?.(),
 				},
 			};
 		});
 }
 
-const { Content, sourcePath, title } = Astro.props;
+const { Content, sourcePath, title, benchPayloads, toc } = Astro.props;
 ---
 
-<MarkdownLayout title={title} sourcePath={sourcePath}>
+<MarkdownLayout title={title} sourcePath={sourcePath} benchPayloads={benchPayloads} toc={toc}>
 	<Content />
 </MarkdownLayout>

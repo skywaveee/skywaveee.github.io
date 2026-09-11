@@ -6,6 +6,11 @@ interface MarkdownModule {
 		title?: string;
 		description?: string;
 	};
+	getHeadings?: () => {
+		depth: number;
+		slug: string;
+		text: string;
+	}[];
 	Content: unknown;
 }
 
@@ -14,14 +19,17 @@ const modules = import.meta.glob('../../content/benchdecoded/**/*.md', {
 }) as Record<string, MarkdownModule>;
 
 const entries = Object.entries(modules);
-const overviewEntry = entries.find(([path]) => path.endsWith('/README.md'));
+const overviewEntry = entries.find(([path]) =>
+	path.endsWith('/content/benchdecoded/README.md'),
+);
 const Overview = overviewEntry?.[1].Content;
+const overviewToc = overviewEntry?.[1].getHeadings?.();
 
 const documents = entries
-	.filter(([path]) => !path.endsWith('/README.md'))
+	.filter(([path]) => /\/benchmarks\/[^/]+\/README\.md$/i.test(path))
 	.map(([path, module]) => {
 		const sourcePath = path.split('/content/benchdecoded/')[1];
-		const slug = sourcePath.replace(/\.md$/i, '').replace(/\/README$/i, '');
+		const slug = sourcePath.split('/')[1];
 		const fallbackTitle = slug.split('/').at(-1)?.replaceAll('-', ' ') ?? slug;
 
 		return {
@@ -34,13 +42,13 @@ const documents = entries
 	.sort((left, right) => left.title.localeCompare(right.title));
 ---
 
-<MarkdownLayout title="BenchDecoded">
+<MarkdownLayout title="BenchDecoded" toc={overviewToc}>
 	{Overview ? <Overview /> : <h1>BenchDecoded</h1>}
 
 	{
 		documents.length > 0 ? (
 			<>
-				<h2>Benchmark Walkthroughs</h2>
+				<h2>Benchmark 拆解</h2>
 				<ul class="document-list">
 					{documents.map((document) => (
 						<li>
@@ -53,7 +61,7 @@ const documents = entries
 				</ul>
 			</>
 		) : (
-			<p>Benchmark walkthroughs will appear here as Markdown files are added.</p>
+			<p>添加 Benchmark 条目后会显示在这里。</p>
 		)
 	}
 </MarkdownLayout>

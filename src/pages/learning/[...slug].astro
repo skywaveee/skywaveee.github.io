@@ -1,0 +1,50 @@
+---
+import LearningLayout from '../../layouts/LearningLayout.astro';
+
+interface LearningModule {
+	frontmatter: {
+		title?: string;
+		description?: string;
+		source_note?: string;
+	};
+	getHeadings?: () => {
+		depth: number;
+		slug: string;
+		text: string;
+	}[];
+	Content: unknown;
+}
+
+export function getStaticPaths() {
+	const modules = import.meta.glob('../../content/learning/*.md', {
+		eager: true,
+	}) as Record<string, LearningModule>;
+
+	return Object.entries(modules).map(([path, module]) => {
+		const slug = path.split('/').at(-1)?.replace(/\.md$/i, '') ?? '';
+		return {
+			params: { slug },
+			props: {
+				Content: module.Content,
+				title: module.frontmatter.title ?? slug,
+				description: module.frontmatter.description,
+				sourceNote: module.frontmatter.source_note,
+				toc: module.getHeadings?.(),
+				slug,
+			},
+		};
+	});
+}
+
+const { Content, title, description, sourceNote, toc, slug } = Astro.props;
+---
+
+<LearningLayout
+	title={title}
+	description={description}
+	sourceNote={sourceNote}
+	toc={toc}
+	slug={slug}
+>
+	<Content />
+</LearningLayout>

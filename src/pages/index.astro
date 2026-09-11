@@ -1,29 +1,84 @@
 ---
+import '../styles/home.css';
+
+const interests = [
+  { number: '01', title: 'Agents', subtitle: '智能体', description: '让模型在真实环境中推理、行动与解决问题。' },
+  { number: '02', title: 'Post-training', subtitle: '后训练', description: '从示范与反馈中学习，探索模型能力的边界。' },
+  { number: '03', title: 'Self-evolution', subtitle: '自进化', description: '让智能体在实践与经验中持续改进。' },
+];
+const notes = [
+  { label: 'FOUNDATIONS', title: '后训练基础', description: '从能力与任务定义出发，串起 SFT、RL 与 Benchmark。', href: '/learning/post-training-foundations/' },
+  { label: 'AGENT LEARNING', title: 'Multi-turn Agentic RL', description: '从多轮交互轨迹，走到反馈信号与策略更新。', href: '/learning/agentic-rl/' },
+  { label: 'BENCHMARK NOTES', title: 'RSI-Exam 解读', description: '拆解题内实验、代码改进与隐藏数据验证的完整过程。', href: '/benchdecoded/rsi-exam/' },
+];
 ---
 
 <!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<meta name="description" content="skywaveee" />
-		<title>skywaveee</title>
-	</head>
-	<body>
-		<main aria-label="Homepage"></main>
-	</body>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content="ywaveee · THU 博士四年级 · 智谱实习中。关注 Agents、Post-training 与 Self-evolution，分享学习笔记与研究记录。" />
+    <meta name="theme-color" content="#fcfaff" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href="https://skywaveee.github.io/" />
+    <title>ywaveee · Personal Homepage</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#content">跳到正文</a>
+    <div class="page-frame">
+      <header class="site-header">
+        <a class="brand" href="/" aria-label="skywaveee 主页"><span class="brand-mark" aria-hidden="true">s/</span><span>skywaveee<span class="brand-period">.</span></span></a>
+        <nav aria-label="主导航">
+          <a class="active" href="#about" aria-current="page">关于我</a>
+          <a href="#knowledge">知识库</a>
+          <a class="github-link" href="https://github.com/skywaveee" target="_blank" rel="noopener noreferrer" aria-label="GitHub（在新标签页打开）">GitHub <span aria-hidden="true">↗</span></a>
+        </nav>
+      </header>
+      <main id="content">
+        <section class="profile" id="about" aria-labelledby="profile-title">
+          <div class="profile-copy">
+            <p class="eyebrow"><span class="small-rule" aria-hidden="true"></span> HELLO, I'M</p>
+            <h1 id="profile-title">ywaveee</h1>
+            <p class="profile-intro">关注智能体如何学习、行动，并持续进化。</p>
+            <div class="affiliations" aria-label="教育与当前实习">
+              <div class="affiliation"><span class="affiliation-symbol" aria-hidden="true">T</span><div><strong>Tsinghua University</strong><span>PhD Student · Year 4</span></div></div>
+              <div class="affiliation"><span class="affiliation-symbol zhipu-symbol" aria-hidden="true">Z</span><div><strong>Zhipu AI <span class="current-label">NOW</span></strong><span>实习中</span></div></div>
+            </div>
+            <div class="profile-links">
+              <a class="text-link profile-link" href="#knowledge">学习笔记 <span aria-hidden="true">↓</span></a>
+            </div>
+          </div>
+          <aside class="research" aria-labelledby="research-title">
+            <div class="research-heading"><h2 id="research-title">CURRENT RESEARCH INTERESTS</h2><span aria-hidden="true">[ 01 — 03 ]</span></div>
+            <ol class="interest-list">
+              {interests.map((interest) => (
+                <li><span class="interest-number" aria-hidden="true">{interest.number}</span><div><h3>{interest.title}<span>{interest.subtitle}</span></h3><p>{interest.description}</p></div></li>
+              ))}
+            </ol>
+            <div class="research-question"><span class="question-mark" aria-hidden="true">↳</span><p>How can agents learn<br /><em>to keep getting better?</em></p></div>
+          </aside>
+        </section>
+        <section class="knowledge" id="knowledge" aria-labelledby="knowledge-title">
+          <div class="section-heading"><div><p class="eyebrow">LEARNING IN PUBLIC</p><h2 id="knowledge-title">边学，边记录<span>。</span></h2></div><p>一些学习笔记，也是一份持续更新的知识地图。</p></div>
+          <div class="knowledge-grid">
+            <a class="library-card" href="/learning/">
+              <div class="library-top"><span class="library-kicker">THE KNOWLEDGE BASE</span><span class="round-arrow" aria-hidden="true">↗</span></div>
+              <div class="library-title"><span>Agent Learning</span><h3>学习知识库</h3></div>
+              <p>从一条轨迹、一次参数更新，<br />走到可验证的 Agent 学习。</p>
+              <div class="library-bottom"><span>SFT <span aria-hidden="true">/</span> RL <span aria-hidden="true">/</span> Evaluation</span><span>进入知识库 <span aria-hidden="true">→</span></span></div>
+            </a>
+            <div class="selected-notes">
+              {notes.map((note) => (
+                <a class="note" href={note.href}><div><span class="note-label">{note.label}</span><h3>{note.title}</h3><p>{note.description}</p></div><span class="note-arrow" aria-hidden="true">↗</span></a>
+              ))}
+            </div>
+          </div>
+          <a class="benchmark-link" href="/benchdecoded/"><span><strong>BenchDecoded</strong><span class="benchmark-description">一个 Benchmark，一个真实样本，一条完整评分链。</span></span><span class="text-link">浏览实践记录 <span aria-hidden="true">→</span></span></a>
+        </section>
+        <section class="coming-soon" aria-labelledby="coming-title"><span class="coming-icon" aria-hidden="true">···</span><div><h2 id="coming-title">更多内容，正在准备中</h2><p>新的研究与个人记录会陆续放在这里。下次见～</p></div><span class="coming-label">A WORK IN PROGRESS</span></section>
+      </main>
+      <footer class="site-footer"><span>© {new Date().getFullYear()} ywaveee</span><span>保持好奇，持续学习。</span><a href="#about">回到顶部 <span aria-hidden="true">↑</span></a></footer>
+    </div>
+  </body>
 </html>
-
-<style>
-	:global(html),
-	:global(body) {
-		margin: 0;
-		min-height: 100%;
-		background: #fff;
-	}
-
-	main {
-		min-height: 100vh;
-	}
-</style>

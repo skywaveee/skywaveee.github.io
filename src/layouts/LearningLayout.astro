@@ -1,0 +1,141 @@
+---
+import 'katex/dist/katex.min.css';
+import '../styles/markdown.css';
+import '../styles/learning.css';
+
+interface Heading {
+	depth: number;
+	slug: string;
+	text: string;
+}
+
+interface Props {
+	title: string;
+	description?: string;
+	slug?: string;
+	toc?: Heading[];
+	sourceNote?: string;
+}
+
+const { title, description, slug = '', toc, sourceNote } = Astro.props;
+
+interface LearningModule {
+	frontmatter: {
+		title?: string;
+		short_title?: string;
+		track?: string;
+		order?: number;
+	};
+}
+
+const modules = import.meta.glob('../content/learning/*.md', {
+	eager: true,
+}) as Record<string, LearningModule>;
+
+const lessons = Object.entries(modules)
+	.map(([path, module]) => {
+		const lessonSlug = path.split('/').at(-1)?.replace(/\.md$/i, '') ?? '';
+		return {
+			slug: lessonSlug,
+			title: module.frontmatter.short_title ?? module.frontmatter.title ?? lessonSlug,
+			track: module.frontmatter.track ?? 'Agent Learning',
+			order: module.frontmatter.order ?? 999,
+			href: `/learning/${lessonSlug}/`,
+		};
+	})
+	.sort((left, right) => left.order - right.order || left.title.localeCompare(right.title));
+
+const tocItems = (toc ?? []).filter((heading) => heading.depth === 2);
+const currentPath = Astro.url.pathname.replace(/\/$/, '');
+const isIndex = currentPath === '/learning';
+const currentIndex = lessons.findIndex((lesson) => lesson.slug === slug);
+const previousLesson = currentIndex > 0 ? lessons[currentIndex - 1] : undefined;
+const nextLesson = currentIndex >= 0 && currentIndex < lessons.length - 1 ? lessons[currentIndex + 1] : undefined;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="description" content={description ?? `${title} — skywaveee 学习知识库`} />
+		<title>{title} · skywaveee 学习知识库</title>
+	</head>
+	<body>
+		<a class="skip-link" href="#content">跳到正文</a>
+		<header class="global-header">
+			<a class="brand" href="/" aria-label="skywaveee 主页">
+				<span class="brand-mark" aria-hidden="true">s/</span>
+				<span>skywaveee</span>
+			</a>
+			<nav aria-label="主导航">
+				<a class:list={[currentPath.startsWith('/learning') && 'on']} href="/learning/">学习知识库</a>
+				<a class:list={[currentPath.startsWith('/benchdecoded') && 'on']} href="/benchdecoded/">BenchDecoded</a>
+			</nav>
+		</header>
+
+		<div class:list={['learning-shell', tocItems.length === 0 && 'no-toc']}>
+			<aside class="learning-nav" aria-label="学习路线">
+				<span class="rail-label">Agent Learning</span>
+					<a class:list={['rail-link', isIndex && 'on']} aria-current={isIndex ? 'page' : undefined} href="/learning/">路线总览</a>
+				{lessons.map((lesson) => (
+					<a class:list={['rail-link', lesson.slug === slug && 'on']} aria-current={lesson.slug === slug ? 'page' : undefined} href={lesson.href}>
+						<span>{String(lesson.order).padStart(2, '0')}</span>
+						{lesson.title}
+					</a>
+				))}
+				<div class="rail-bridge">
+					<span>实践验证</span>
+					<a href="/benchdecoded/">去 BenchDecoded →</a>
+				</div>
+			</aside>
+
+			<main id="content">
+				<article class="markdown learning-article">
+					<slot />
+				</article>
+				{sourceNote && <p class="source-path">{sourceNote}</p>}
+				{currentIndex >= 0 && (
+					<nav class="lesson-pagination" aria-label="相邻课程">
+						{previousLesson ? (
+							<a rel="prev" href={previousLesson.href}><span>← 上一课</span><strong>{previousLesson.title}</strong></a>
+						) : <span></span>}
+						{nextLesson && (
+							<a class="next" rel="next" href={nextLesson.href}><span>下一课 →</span><strong>{nextLesson.title}</strong></a>
+						)}
+					</nav>
+				)}
+			</main>
+
+			{tocItems.length > 0 && (
+				<aside class="learning-toc" aria-label="本页目录">
+					<span class="rail-label">本页目录</span>
+					<nav id="learning-toc-nav">
+						{tocItems.map((heading) => <a href={`#${heading.slug}`}>{heading.text}</a>)}
+					</nav>
+				</aside>
+			)}
+		</div>
+
+		<script>
+			const nav = document.getElementById('learning-toc-nav');
+			if (nav) {
+				const links = [...nav.querySelectorAll('a')];
+				const headings = links
+					.map((link) => document.getElementById(decodeURIComponent(link.hash.slice(1))))
+					.filter(Boolean);
+				const update = () => {
+					let current = headings[0]?.id ?? '';
+					for (const heading of headings) {
+						if ((heading as HTMLElement).getBoundingClientRect().top < 128) current = heading.id;
+					}
+					links.forEach((link) => link.classList.toggle('on', link.hash === `#${current}`));
+				};
+				update();
+				window.addEventListener('scroll', () => requestAnimationFrame(update), { passive: true });
+			}
+		</script>
+	</body>
+</html>

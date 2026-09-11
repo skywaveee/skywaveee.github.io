@@ -19,7 +19,7 @@ async function sourceExists() {
 	}
 }
 
-async function collectMarkdown(directory) {
+async function collectPublicContent(directory) {
 	const files = [];
 
 	for (const entry of await readdir(directory, { withFileTypes: true })) {
@@ -29,13 +29,14 @@ async function collectMarkdown(directory) {
 
 		const absolutePath = resolve(directory, entry.name);
 		if (entry.isDirectory()) {
-			files.push(...(await collectMarkdown(absolutePath)));
+			files.push(...(await collectPublicContent(absolutePath)));
 			continue;
 		}
 
 		if (
 			entry.isFile() &&
-			entry.name.toLowerCase().endsWith('.md') &&
+			(entry.name.toLowerCase().endsWith('.md') ||
+				entry.name.toLowerCase().endsWith('.json')) &&
 			!ignoredFiles.has(entry.name)
 		) {
 			files.push(absolutePath);
@@ -55,9 +56,9 @@ if (!(await sourceExists())) {
 	);
 }
 
-const markdownFiles = await collectMarkdown(sourceRoot);
+const publicFiles = await collectPublicContent(sourceRoot);
 
-for (const sourceFile of markdownFiles) {
+for (const sourceFile of publicFiles) {
 	const relativePath = relative(sourceRoot, sourceFile);
 	const destinationFile = resolve(destinationRoot, relativePath);
 	await mkdir(dirname(destinationFile), { recursive: true });
@@ -65,4 +66,4 @@ for (const sourceFile of markdownFiles) {
 }
 
 const displaySource = sourceRoot.split(sep).join('/');
-console.log(`Synced ${markdownFiles.length} Markdown file(s) from ${displaySource}.`);
+console.log(`Synced ${publicFiles.length} public content file(s) from ${displaySource}.`);

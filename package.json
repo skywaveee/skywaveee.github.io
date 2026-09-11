@@ -7,13 +7,18 @@
   },
   "scripts": {
     "sync:benchdecoded": "node scripts/sync-benchdecoded.mjs",
-    "dev": "npm run sync:benchdecoded && astro dev",
-    "build": "npm run sync:benchdecoded && astro build",
+    "check:learning-content": "node scripts/check-learning-markdown.mjs",
+    "dev": "npm run check:learning-content && npm run sync:benchdecoded && astro dev",
+    "build": "npm run check:learning-content && npm run sync:benchdecoded && astro build",
     "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^7.3.1"
+    "@astrojs/markdown-remark": "^7.3.0",
+    "astro": "^7.3.1",
+    "katex": "^0.18.7",
+    "rehype-katex": "^7.0.1",
+    "remark-math": "^6.0.0"
   },
   "allowScripts": {
     "esbuild": true

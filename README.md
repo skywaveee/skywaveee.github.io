@@ -1,17 +1,28 @@
 # skywaveee.github.io
 
-Personal website and project hub for `skywaveee`.
+Personal research website and learning hub for `skywaveee`.
 
-The homepage intentionally remains blank until its visual identity is designed. The first project route is `/benchdecoded/`.
+The homepage introduces ywaveee, a fourth-year PhD student at Tsinghua University, the current internship at Zhipu AI, and current research interests in Agents, Post-training, and Self-evolution. It features selected knowledge-base entries and a note about future updates. The light purple homepage presentation is isolated in `src/pages/index.astro` and `src/styles/home.css`.
+
+The homepage links two complementary surfaces:
+
+- `/learning/` — a ten-part Agent Learning curriculum spanning post-training foundations, Agentic SFT, RL foundations, PPO, reward/verifiers, GRPO, OPD, multi-turn Agentic RL, training systems, and evaluation;
+- `/benchdecoded/` — executable benchmark walkthroughs synced from the sibling repository.
+
+## Learning content
+
+The Markdown files in `src/content/learning/` are the canonical source for the learning library. Write portable Markdown and keep presentation in Astro/CSS so the same document remains readable on the website, GitHub, and Markdown previewers.
+
+See [Learning knowledge-base content authoring](docs/CONTENT_AUTHORING.md) for the required structure, math conventions, supported content patterns, and validation command.
 
 ## BenchDecoded content
 
-The site does not duplicate project Markdown by hand. Before every local development session or production build, `scripts/sync-benchdecoded.mjs` copies public Markdown from the BenchDecoded repository into generated Astro content.
+The site does not duplicate project content by hand. Before every local development session or production build, `scripts/sync-benchdecoded.mjs` copies public Markdown and JSON from the BenchDecoded repository into generated Astro content.
 
 Local development uses the sibling repository by default:
 
 ```text
-/Users/yuuweii/Documents/code/skywaveee/
+<workspace>/
 ├── benchdecoded/
 └── skywaveee.github.io/
 ```
