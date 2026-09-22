@@ -1,0 +1,137 @@
+---
+import MindspaceLayout from '../../layouts/MindspaceLayout.astro';
+import site from '../../content/mindspace/site.json';
+const layers = [
+  { number: '01', name: 'Knowledge', title: '让知识有处可寻', text: '给论文、方法和证据留下位置。知道结论来自哪里，也知道它的适用边界。', file: 'knowledge/' },
+  { number: '02', name: 'Understanding', title: '知道自己理解到哪', text: '从多轮共读中留下问题、解释与自己的判断，用轻量索引连接起来。', file: 'UNDERSTANDING.md' },
+  { number: '03', name: 'Research', title: '让下一次接得上', text: '保留问题、判断与下一步。换一个会话，研究依然沿着自己的思路继续。', file: 'projects/' },
+];
+const guides = [
+  { label: 'START HERE', title: '从一个问题开始', description: '复制模板，接入工具，完成第一次研究协作。', href: '/mindspace/getting-started/' },
+  { label: 'THE PRACTICE', title: '知识与理解，一起积累', description: '什么时候读，什么时候写，如何保留判断的依据。', href: '/mindspace/workflow/' },
+  { label: 'A SMALL EXAMPLE', title: '一条 insight 怎样留下来', description: '跟着一个教学示例，从材料走到自己的下一步。', href: '/mindspace/example/' },
+];
+---
+<MindspaceLayout description={site.description}>
+  <section class="ms-hero" aria-labelledby="hero-title">
+    <div class="ms-hero-copy">
+      <p class="ms-eyebrow"><span class="ms-status-dot" aria-hidden="true"></span> HUMAN × AI CO-EVOLUTION</p>
+      <h1 id="hero-title">人与 AI，<br /><span>共同进化。</span></h1>
+      <p class="ms-lead">从 Mindspace 开始，搭建自己的外置科研大脑。<br class="ms-desktop-break" />让 AI 带着你的知识工作，也让自己在研究中成长。</p>
+      <div class="ms-actions"><a class="ms-button ms-primary" href="#start">搭建我的 Mindspace <span aria-hidden="true">↗</span></a><a class="ms-text-link" href={site.repository} target="_blank" rel="noopener noreferrer">GitHub 仓库 <span aria-hidden="true">↗</span></a></div>
+      <p class="ms-hero-note">本地文件 · 自己掌握 · 从一个问题开始</p>
+    </div>
+    <div class="ms-workspace" aria-label="Mindspace 工作空间教学示例">
+      <div class="ms-window-bar"><span class="ms-window-dots" aria-hidden="true"><i></i><i></i><i></i></span><span>my mindspace</span><span class="ms-example-tag">示例</span></div>
+      <div class="ms-workspace-body">
+        <div class="ms-file-nav"><p>MY RESEARCH</p><span class="ms-file-home">⌂ &nbsp; HOME.md</span><div role="tablist" aria-label="示例内容" aria-orientation="vertical"><button id="tab-knowledge" type="button" role="tab" aria-selected="true" aria-controls="panel-knowledge" data-panel="knowledge">研究知识 <span>01</span></button><button id="tab-understanding" type="button" role="tab" aria-selected="false" aria-controls="panel-understanding" tabindex="-1" data-panel="understanding">个人理解 <span>02</span></button><button id="tab-research" type="button" role="tab" aria-selected="false" aria-controls="panel-research" tabindex="-1" data-panel="research">项目推进 <span>03</span></button></div><span class="ms-file-bottom">ideas / decisions / inbox</span></div>
+        <div class="ms-file-view">
+          <section id="panel-knowledge" role="tabpanel" aria-labelledby="tab-knowledge" tabindex="0"><p class="ms-file-path">knowledge / research-note.md</p><span class="ms-chip">已收录 · 原文待核</span><h2>更多材料，<br />一定更好吗？</h2><p class="ms-demo-text">记录一个值得追问的研究问题，保留来源与结论的边界。</p><div class="ms-demo-rule"></div><p class="ms-demo-label">待核对的问题</p><p class="ms-demo-text">提升来自更多信息，还是更相关的信息？</p><div class="ms-note-mark">收录了，不等于理解了。</div></section>
+          <section id="panel-understanding" role="tabpanel" aria-labelledby="tab-understanding" tabindex="0" hidden><p class="ms-file-path">knowledge / UNDERSTANDING.md</p><span class="ms-chip">正在共读</span><h2>这一次，<br />我理解到了哪里？</h2><p class="ms-demo-text">我能解释：无关信息可能干扰回答。但还不能确定因果。</p><div class="ms-demo-rule"></div><p class="ms-demo-label">我还想弄明白</p><p class="ms-demo-text">怎样区分相关性、位置和长度的影响？</p><div class="ms-note-mark">疑问，也是一种进展。</div></section>
+          <section id="panel-research" role="tabpanel" aria-labelledby="tab-research" tabindex="0" hidden><p class="ms-file-path">projects / retrieval.md</p><span class="ms-chip">候选解释 · 尚未验证</span><h2>下次开始，<br />从这里继续。</h2><p class="ms-demo-text">先核对原文，再设计一个能区分不同解释的对照。</p><div class="ms-demo-rule"></div><p class="ms-demo-label">为什么这样做</p><p class="ms-demo-text">需要证据，才能把一个想法变成可信的判断。</p><div class="ms-note-mark">留下下一步，也留下原因。</div></section>
+        </div>
+      </div>
+      <div class="ms-workspace-foot"><span class="ms-status-dot" aria-hidden="true"></span><span>知识有来源 · 理解有过程 · 研究有接续</span></div>
+    </div>
+  </section>
+
+  <section class="ms-thesis" aria-label="核心理念"><span class="ms-section-number">THE IDEA</span><p>知识库可以比你更广。<br /><strong>在做研究判断的地方，让理解慢慢跟上。</strong></p><span class="ms-orbit" aria-hidden="true"><i></i></span></section>
+
+  <section class="ms-layers" aria-labelledby="layers-title"><div class="ms-section-head"><div><p class="ms-eyebrow">KNOWLEDGE. DIALOGUE. PRACTICE.</p><h2 id="layers-title">收集到的，理解了的，正在做的。</h2></div><p>让三者彼此连接，也各有位置。</p></div><div class="ms-layer-grid">{layers.map(layer => <article class="ms-layer"><div class="ms-layer-top"><span>{layer.number}</span><span>{layer.name}</span></div><h3>{layer.title}</h3><p>{layer.text}</p><code>{layer.file}</code></article>)}</div></section>
+
+  <section class="ms-start ms-connect" id="start" aria-labelledby="start-title">
+    <div class="ms-start-copy"><p class="ms-eyebrow">YOUR AI. YOUR WORKSPACE.</p><h2 id="start-title">从今天用的工具，<br />开始搭自己的工作台。</h2><p>已经在用 Codex、Claude Code、Cursor 或 ZCode？把 Mindspace 接进去，下次对话就能从自己的研究继续。</p><a class="ms-button ms-primary" href="/downloads/mindspace-v0.1.zip" download>下载 v0.1 模板 <span aria-hidden="true">↓</span></a><span class="ms-download-note">本地 Markdown 文件 · 无需搭服务器</span><a class="ms-small-link" href="/mindspace/getting-started/">完整指南与常见问题 →</a><div class="ms-start-aside"><strong>两个位置，别放错。</strong><p>个人空间存知识与记录。入口文件放在 AI 当前打开的项目里，指向这份个人空间。第一次也可以直接打开个人空间，把两者放在一起。</p></div></div>
+    <div class="ms-setup">
+      <div class="ms-setup-step"><span class="ms-step-number">01</span><div><h3>解压模板，创建个人空间</h3><p>新建 ResearchMindspace 文件夹，把 ZIP 中 <code>mindspace/template/</code> 里面的内容复制进去。打开后应该直接看到 <code>HOME.md</code>。</p></div></div>
+      <div class="ms-setup-step"><span class="ms-step-number">02</span><div><h3>选工具，填写这个文件夹的完整路径</h3><p>在工具里打开你正在工作的项目；还没有项目，就打开 ResearchMindspace。</p></div></div>
+      <div class="ms-config-fields"><label for="agent-tool">我正在使用<select id="agent-tool"><option value="codex">Codex</option><option value="claude">Claude Code / CC</option><option value="cursor">Cursor</option><option value="zcode">ZCode Agent</option></select></label><label for="space-path">个人空间的完整路径<input id="space-path" type="text" autocomplete="off" spellcheck="false" placeholder="粘贴包含 HOME.md 的文件夹路径" aria-describedby="path-help path-error" /></label></div>
+      <p id="path-help" class="ms-config-help">例如 /Users/你的用户名/ResearchMindspace 或 C:/Users/你的用户名/ResearchMindspace。请换成真实路径；只在此页面生成文字，不上传或保存。</p>
+      <p id="path-error" class="ms-config-error" role="status"></p>
+      <div class="ms-config-target"><span>当前项目的入口文件</span><strong id="target-file">AGENTS.md</strong><p id="tool-note">放在当前打开的项目根目录。如果已有 AGENTS.override.md，先检查覆盖关系。</p><a id="tool-source" href="https://learn.chatgpt.com/docs/agent-configuration/agents-md" target="_blank" rel="noopener noreferrer">官方说明 ↗</a></div>
+      <div class="ms-mode-switch" role="group" aria-label="配置方式"><button type="button" data-mode="assist" aria-pressed="true">让 AI 帮我配置</button><button type="button" data-mode="manual" aria-pressed="false">手动粘贴到文件</button></div>
+      <p id="mode-help" class="ms-config-help">复制后发给当前项目里的 AI。它会检查路径与现有规则，再创建或追加入口。</p>
+      <div class="ms-prompt"><div class="ms-prompt-head"><span>YOUR MINDSPACE CONNECTION</span><button id="copy-prompt" type="button" disabled>复制配置提示词 ⧉</button></div><pre id="init-prompt">先选择工具并填写真实路径，这里会生成可以直接复制的内容。</pre><p id="copy-status" role="status" aria-live="polite"></p></div>
+      <div class="ms-setup-step ms-verify"><span class="ms-step-number">03</span><div><h3>保存后，新建会话验证</h3><p>在同一个项目新建会话，发送下面这段话。对照 HOME.md 检查回答，确认它真的读到了你的文件。</p></div></div>
+      <div class="ms-prompt"><div class="ms-prompt-head"><span>CHECK THE CONNECTION</span><button id="copy-verify" type="button">复制验证提示词 ⧉</button></div><pre id="verify-prompt">请按项目指令接入 Mindspace，实际读取 HOME.md 和 WORKFLOW.md，并列出成功读取的完整路径。复述 HOME.md 中我的研究方向与当前问题；没填就说未填写。读取失败请说明原因，不要猜测或假装已接通。接通后，每次问我一个问题，帮助我填写必要入口并推进眼前的问题。</pre><p id="verify-status" role="status" aria-live="polite"></p></div>
+      <p class="ms-config-help">没有文件就新建，已有文件只追加。文件名是 <strong>AGENTS.md</strong>（不是 Agent.md）；Claude Code 则是 CLAUDE.md。入口不会自动授予文件权限，外部目录按工具提示开放。<a href="/mindspace/getting-started/">接通失败怎么查 →</a></p>
+      <noscript><p>接入生成器需要 JavaScript；也可以按<a href="/mindspace/getting-started/">完整指南</a>，复制下载包 prompts/connect.md 的内容并手动替换路径。</p></noscript>
+    </div>
+  </section>
+
+  <section class="ms-guides" aria-labelledby="guides-title"><div class="ms-section-head"><div><p class="ms-eyebrow">A PRACTICE, IN PROGRESS</p><h2 id="guides-title">把方法带进自己的研究。</h2></div><p>几篇短指南，陪你走过第一轮。</p></div><div class="ms-guide-grid">{guides.map(guide => <a class="ms-guide" href={guide.href}><span class="ms-eyebrow">{guide.label}</span><h3>{guide.title} <span aria-hidden="true">↗</span></h3><p>{guide.description}</p></a>)}</div></section>
+
+  <section class="ms-evolving" aria-labelledby="evolving-title"><span class="ms-evolving-symbol" aria-hidden="true">＋</span><div><p class="ms-eyebrow">VERSION 0.1 · BUILDING IN PUBLIC</p><h2 id="evolving-title">从自己的实践，慢慢长出来。</h2><p>第一版聚焦知识整理、共同学习与研究接续。<br />实验组织、自动执行与经验反馈，是接下来值得探索的方向。</p></div><a class="ms-text-link" href={site.repository} target="_blank" rel="noopener noreferrer">一起改进 <span aria-hidden="true">↗</span></a></section>
+  <script>
+    import adapters from '../../content/mindspace/adapters.json';
+    import connection from '../../content/mindspace/prompts/connect.md?raw';
+    const tabs = [...document.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+    function selectTab(tab: HTMLButtonElement) {
+      tabs.forEach(item => { const selected = item === tab; item.setAttribute('aria-selected', String(selected)); item.tabIndex = selected ? 0 : -1; const panel = document.getElementById(item.getAttribute('aria-controls')!); if(panel) panel.hidden = !selected; });
+    }
+    tabs.forEach((tab,index) => {
+      tab.addEventListener('click', () => selectTab(tab));
+      tab.addEventListener('keydown', event => {
+        let next = index;
+        if (event.key === 'ArrowDown') next = (index+1)%tabs.length;
+        else if (event.key === 'ArrowUp') next = (index-1+tabs.length)%tabs.length;
+        else if (event.key === 'Home') next = 0;
+        else if (event.key === 'End') next = tabs.length-1;
+        else return;
+        event.preventDefault(); selectTab(tabs[next]); tabs[next].focus();
+      });
+    });
+    const toolSelect = document.querySelector<HTMLSelectElement>('#agent-tool')!;
+    const pathInput = document.querySelector<HTMLInputElement>('#space-path')!;
+    const prompt = document.getElementById('init-prompt')!;
+    const copy = document.querySelector<HTMLButtonElement>('#copy-prompt')!;
+    const error = document.getElementById('path-error')!;
+    const status = document.getElementById('copy-status')!;
+    const modes = [...document.querySelectorAll<HTMLButtonElement>('[data-mode]')];
+    let mode = 'assist';
+    function renderConnection() {
+      const tool = adapters.find(item => item.id === toolSelect.value)!;
+      const path = pathInput.value.trim().replace(/[/\\]+$/, '');
+      const valid = /^(\/[^\s]|[A-Za-z]:[/\\])/.test(path) && !/[\r\n`<>]/.test(path);
+      document.getElementById('target-file')!.textContent = tool.file;
+      document.getElementById('tool-note')!.textContent = tool.note;
+      (document.getElementById('tool-source') as HTMLAnchorElement).href = tool.url;
+      error.textContent = path && !valid ? '请填写实际绝对路径，不要使用 ~、占位符或多行文字。' : '';
+      pathInput.setAttribute('aria-invalid', String(Boolean(path) && !valid));
+      status.textContent = '';
+      copy.disabled = !valid;
+      copy.textContent = mode === 'assist' ? '复制配置提示词 ⧉' : '复制入口内容 ⧉';
+      document.getElementById('mode-help')!.textContent = mode === 'assist' ? '复制后发给当前项目里的 AI。它会检查路径与现有规则，再创建或追加入口。' : `打开当前项目根目录的 ${tool.file}，将内容追加到末尾后保存；没有文件就新建。不要覆盖原有规则。`;
+      if (!valid) { prompt.textContent = '先选择工具并填写真实路径，这里会生成可以直接复制的内容。'; return; }
+      const snippet = connection.split('```text')[1].split('```')[0].trim().replace('<MINDSPACE_PATH>', path);
+      prompt.textContent = mode === 'manual' ? snippet : `请帮我将 Mindspace 接入当前 ${tool.name} 项目。
+个人空间的实际路径是：${path}
+
+先检查该目录中的 HOME.md 和 WORKFLOW.md 是否存在且可读；若失败，报告具体原因并停止配置，不创建空知识库。
+确认当前工作目录就是我打开的项目根目录；不确定时先询问。
+检查现有 ${tool.file} 及相关指令，保留原有规则，仅创建或更新 Mindspace 入口，避免重复段落。若文件是符号链接，先说明实际目标，不直接修改链接指向的其他文件。
+工具注意事项：${tool.note}
+有冲突或覆盖关系时先解释，不删除原规则。只修改本项目入口，不修改全局配置，不执行 Git 提交或发布。
+完成后给出修改路径和具体差异，并提醒我在同一项目新建会话验证。
+
+需要加入的入口内容：
+
+${snippet}`;
+    }
+    toolSelect.addEventListener('change', renderConnection);
+    pathInput.addEventListener('input', renderConnection);
+    modes.forEach(button => button.addEventListener('click', () => {
+      mode = button.dataset.mode!;
+      modes.forEach(item => item.setAttribute('aria-pressed', String(item === button)));
+      renderConnection();
+    }));
+    async function copyText(sourceId: string, statusId: string) {
+      const source = document.getElementById(sourceId)!;
+      const status = document.getElementById(statusId)!;
+      try { await navigator.clipboard.writeText(source.textContent ?? ''); status.textContent = '已复制。请按上方说明粘贴。'; }
+      catch { const range = document.createRange(); range.selectNodeContents(source); const selection = window.getSelection(); selection?.removeAllRanges(); selection?.addRange(range); status.textContent = '请使用系统复制快捷键，文字已选中。'; }
+    }
+    copy.addEventListener('click', () => copyText('init-prompt', 'copy-status'));
+    document.getElementById('copy-verify')!.addEventListener('click', () => copyText('verify-prompt', 'verify-status'));
+    renderConnection();
+  </script>
+</MindspaceLayout>

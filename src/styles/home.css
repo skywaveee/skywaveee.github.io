@@ -151,3 +151,5 @@ h1 { margin-top: 1.4rem; font-family: -apple-system, BlinkMacSystemFont, "Segoe 
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition: none !important; }
 }
+
+.home-mindspace{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:30px 32px;margin-top:28px;background:#f0e8f8;border:1px solid #e0d2ec;border-radius:6px}.home-mindspace h2{font-size:23px;font-weight:550;letter-spacing:-.7px;margin-top:12px}.home-mindspace p{font-size:13px;line-height:1.9;color:var(--muted);margin-top:10px}.home-mindspace-arrow{display:grid;place-items:center;width:42px;height:42px;flex-shrink:0;border:1px solid #cdb8df;border-radius:50%;color:var(--accent);font-size:22px}.home-mindspace:hover{background:#eae0f4}@media(max-width:480px){.home-mindspace{padding:24px 20px;gap:14px}.home-mindspace h2{font-size:19px;line-height:1.6}.home-mindspace-arrow{width:32px;height:32px;font-size:18px}}

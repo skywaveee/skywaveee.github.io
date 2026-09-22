@@ -1,0 +1,34 @@
+[
+  {
+    "id": "codex",
+    "name": "Codex",
+    "file": "AGENTS.md",
+    "note": "放在当前打开的项目根目录。如果同目录已有 AGENTS.override.md，先检查它是否覆盖了入口；不要直接删除。",
+    "global": "~/.codex/AGENTS.md（自定义 CODEX_HOME 时以实际目录为准）",
+    "url": "https://learn.chatgpt.com/docs/agent-configuration/agents-md"
+  },
+  {
+    "id": "claude",
+    "name": "Claude Code",
+    "file": "CLAUDE.md",
+    "note": "放在当前项目根目录。已有文件就追加；同时使用其他工具时，可在 CLAUDE.md 中用 @AGENTS.md 引用已有的共同入口，避免维护两份。",
+    "global": "~/.claude/CLAUDE.md",
+    "url": "https://code.claude.com/docs/en/memory"
+  },
+  {
+    "id": "cursor",
+    "name": "Cursor",
+    "file": "AGENTS.md",
+    "note": "放在 Cursor 当前打开的项目根目录，在 Agent 对话中使用。已有 .cursor/rules 规则可以保留，避免添加相互冲突的重复入口。",
+    "global": "跨项目偏好可放在 Cursor Settings → Rules 的 User Rules 中",
+    "url": "https://cursor.com/docs/rules"
+  },
+  {
+    "id": "zcode",
+    "name": "ZCode",
+    "file": "AGENTS.md",
+    "note": "本指南对应 ZCode Agent：放在当前 Workspace 根目录。它不递归合并各层 AGENTS.md，也不展开 @import；使用其他后端时按对应后端规则配置。",
+    "global": "~/.zcode/AGENTS.md",
+    "url": "https://zcode.z.ai/cn/docs/agents"
+  }
+]

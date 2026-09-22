@@ -9,6 +9,7 @@ on:
   repository_dispatch:
     types:
       - benchdecoded-updated
+      - mindspace-updated
   workflow_dispatch:
 
 permissions:
@@ -33,6 +34,19 @@ jobs:
           repository: skywaveee/benchdecoded
           path: external/benchdecoded
 
+      - name: Checkout Mindspace public content
+        id: mindspace
+        continue-on-error: true
+        uses: actions/checkout@v4
+        with:
+          repository: skywaveee/mindspace
+          ref: main
+          path: external/mindspace
+
+      - name: Explain Mindspace snapshot fallback
+        if: steps.mindspace.outcome != 'success'
+        run: echo "Mindspace checkout unavailable; building the committed public snapshot."
+
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
@@ -44,6 +58,7 @@ jobs:
 
       - name: Build static site
         env:
+          MINDSPACE_SOURCE: ${{ steps.mindspace.outcome == 'success' && format('{0}/external/mindspace', github.workspace) || '' }}
           BENCHDECODED_SOURCE: ${{ github.workspace }}/external/benchdecoded
         run: npm run build
 

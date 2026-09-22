@@ -1,0 +1,32 @@
+---
+import '../styles/mindspace.css';
+interface Props { title?: string; description?: string; article?: boolean; }
+const { title = 'Human × AI Co-evolution · Mindspace', description = '用已有的 AI 工具，搭建自己的外置科研大脑。让知识、个人理解和研究经验，一起积累。', article = false } = Astro.props;
+const canonical = new URL(Astro.url.pathname, 'https://skywaveee.github.io');
+---
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#faf8fc" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <a class="ms-skip" href="#content">跳到正文</a>
+    <div class="ms-frame">
+      <header class="ms-header">
+        <a class="ms-brand" href="/mindspace/" aria-label="Mindspace 首页"><span class="ms-logo" aria-hidden="true">m<span>·</span></span>Mindspace<span class="ms-version">v0.1</span></a>
+        <nav aria-label="主导航"><a href="/">个人主页</a><a href="/learning/">学习知识库</a><a href="/benchdecoded/">BenchDecoded</a><a href="/mindspace/getting-started/" class="ms-nav-start">开始使用 <span aria-hidden="true">↗</span></a></nav>
+      </header>
+      <main id="content" class:list={[article && 'ms-document']}><slot /></main>
+      <footer class="ms-footer"><a href="/">skywaveee <span aria-hidden="true">↗</span></a><span>让知识积累，也让自己成长。</span><span>Mindspace · 2026</span></footer>
+    </div>
+  </body>
+</html>

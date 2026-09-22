@@ -29,7 +29,7 @@ pnpm-debug.log*
 CLAUDE.md
 AGENT.md
 AGENTS.md
-Mindspace
+/Mindspace
 .claude/
 .cursor/
 .codex/

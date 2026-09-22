@@ -1,0 +1,17 @@
+---
+import MindspaceLayout from '../../layouts/MindspaceLayout.astro';
+export function getStaticPaths() {
+  const modules = import.meta.glob('../../content/mindspace/docs/*.md', { eager: true }) as Record<string, any>;
+  const manifests = import.meta.glob('../../content/mindspace/site-manifest.json', { eager: true, import: 'default' }) as Record<string, {pages: {file: string; slug: string}[]}>;
+  const manifest = Object.values(manifests)[0];
+  return manifest.pages.map(page => {
+    const module = modules[`../../content/mindspace/${page.file}`];
+    return { params: { slug: page.slug }, props: { Content: module.Content, title: module.frontmatter.title, description: module.frontmatter.description } };
+  });
+}
+const {Content, title, description} = Astro.props;
+---
+<MindspaceLayout title={`${title} · Mindspace`} description={description} article>
+  <a class="ms-back" href="/mindspace/">← Mindspace</a>
+  <div class="ms-doc-shell"><aside class="ms-doc-nav" aria-label="Mindspace 指南"><p class="ms-eyebrow">THE FIELD GUIDE</p><a href="/mindspace/getting-started/" aria-current={Astro.params.slug === 'getting-started' ? 'page' : undefined}>从一个问题开始</a><a href="/mindspace/workflow/" aria-current={Astro.params.slug === 'workflow' ? 'page' : undefined}>知识与理解，一起积累</a><a href="/mindspace/example/" aria-current={Astro.params.slug === 'example' ? 'page' : undefined}>一条 insight 怎样留下来</a><a class="ms-doc-download" href="/downloads/mindspace-v0.1.zip" download>下载模板 ↓</a></aside><article class="markdown ms-prose"><Content /></article></div>
+</MindspaceLayout>

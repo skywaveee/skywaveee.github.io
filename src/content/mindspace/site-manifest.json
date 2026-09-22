@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "files": [
+    ".gitignore",
+    "CHANGELOG.md",
+    "LICENSE",
+    "README.md",
+    "adapters.json",
+    "assets/mindspace.svg",
+    "docs/example.md",
+    "docs/getting-started.md",
+    "docs/maintaining.md",
+    "docs/workflow.md",
+    "prompts/co-read.md",
+    "prompts/connect.md",
+    "prompts/handoff.md",
+    "prompts/insight.md",
+    "scripts/init.py",
+    "site-manifest.json",
+    "site.json",
+    "template/.gitignore",
+    "template/DAILY.md",
+    "template/HOME.md",
+    "template/WORKFLOW.md",
+    "template/contexts/research.md",
+    "template/decisions/_template.md",
+    "template/ideas/_template.md",
+    "template/inbox/README.md",
+    "template/knowledge/READING.md",
+    "template/knowledge/README.md",
+    "template/knowledge/UNDERSTANDING.md",
+    "template/knowledge/co-reading/_template.md",
+    "template/knowledge/methods/_template.md",
+    "template/knowledge/sources/_template.md",
+    "template/knowledge/topics/_template.md",
+    "template/projects/_template.md"
+  ],
+  "pages": [
+    {
+      "file": "docs/getting-started.md",
+      "slug": "getting-started"
+    },
+    {
+      "file": "docs/workflow.md",
+      "slug": "workflow"
+    },
+    {
+      "file": "docs/example.md",
+      "slug": "example"
+    }
+  ]
+}

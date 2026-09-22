@@ -3,6 +3,7 @@ import { defineConfig } from 'astro/config';
 import { unified } from '@astrojs/markdown-remark';
 import rehypeKatex from 'rehype-katex';
 import remarkMath from 'remark-math';
+import remarkMindspaceLinks from './scripts/remark-mindspace-links.mjs';
 
 // https://astro.build/config
 export default defineConfig({
@@ -13,7 +14,7 @@ export default defineConfig({
 			theme: 'github-light',
 		},
 		processor: unified({
-			remarkPlugins: [remarkMath],
+			remarkPlugins: [remarkMath, remarkMindspaceLinks],
 			rehypePlugins: [rehypeKatex],
 		}),
 	},

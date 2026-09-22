@@ -51,3 +51,14 @@ BENCHDECODED_SOURCE=/absolute/path/to/benchdecoded npm run build
 The GitHub repository must be named `skywaveee.github.io`. In repository settings, configure Pages to use **GitHub Actions**. Pushing the website repository to `main` triggers deployment.
 
 The scheduled workflow checks the public `skywaveee/benchdecoded` repository hourly. Immediate cross-repository deployment can be added later with a `repository_dispatch` event and a narrowly scoped GitHub token.
+
+
+## Mindspace
+
+新增 `/mindspace/` 项目页，以及快速开始、工作方法和教学示例三篇指南。首页、Learning 与 BenchDecoded 导航均有入口。
+
+内容正本在相邻的 `mindspace` 公开模板目录。构建前运行 `npm run sync:mindspace`，只复制其 `site-manifest.json` 中显式列出的文件，生成 `src/content/mindspace/` 快照和 `public/downloads/mindspace-v0.1.zip`。这些生成内容需要随网站提交，以便首次发布或远程仓库临时不可用时仍能构建。
+
+可通过 `MINDSPACE_SOURCE` 指定公开仓库路径；明确指定但不存在的路径会报错。未指定且相邻仓库不存在时，使用已提交的快照。不要将该变量指向私人研究空间。
+
+GitHub Actions 在现有每小时构建中尝试检出 `skywaveee/mindspace` 的 `main` 分支，并同步最新内容；检出失败则记录回退提示，使用快照。模板仓库发布在前、网站发布在后；完整命令由维护者本人执行。

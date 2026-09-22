@@ -1,0 +1,7 @@
+# Optional private workspace versioning
+.DS_Store
+.env
+.env.*
+*.key
+*.pem
+__pycache__/
